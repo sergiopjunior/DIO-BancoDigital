@@ -1,18 +1,21 @@
 package Objetos;
 
 public class Agencia {
-    private final int ID;
+    private int ID;
     private final short numero;
     private String nome;
 
-    public Agencia(int id, short numero, String nome) {
-        ID = id;
+    public Agencia(short numero, String nome) {
         this.numero = numero;
         this.nome = nome;
     }
 
     public int getID(){
         return this.ID;
+    }
+
+    protected void setID(int codigo) {
+        this.ID = codigo;
     }
 
     public short getNumero(){
