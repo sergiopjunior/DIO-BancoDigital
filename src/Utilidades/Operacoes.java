@@ -2,6 +2,8 @@ package Utilidades;
 
 import Objetos.AgenciasLista;
 import Objetos.Agencia;
+import Objetos.Cliente;
+import Objetos.ClientesLista;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -9,6 +11,7 @@ import java.util.Scanner;
 public final class Operacoes {
     private Operacoes() {}
 
+    //////////////////////// Agências ////////////////////////
     public static void cadastrarAgencia(AgenciasLista agenciasLista) {
         String opcao;
         do {
@@ -110,7 +113,7 @@ public final class Operacoes {
             System.out.println("CONSULTAR AGÊNCIA");
             System.out.println("Informe o número da agência a ser pesquisada: ");
             short agencia_numero = scanner.nextShort();
-            System.out.println(agencia_numero);
+
             Agencia agencia = agenciasLista.listarAgenciaPorNumero(agencia_numero);
 
             if (agencia != null) {
@@ -141,6 +144,148 @@ public final class Operacoes {
     public static void relatorioDeAgencias(AgenciasLista agenciasLista) {
         System.out.println("RELATÓRIO\n");
         agenciasLista.listarAgencias();
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("APERTE QUALQUER LETRA + ENTER PARA CONTINUAR");
+        scanner.next();
+    }
+
+    //////////////////////// Clientes ////////////////////////
+    public static void cadastrarCliente(ClientesLista clientesLista) {
+        String opcao;
+        do {
+            System.out.println("CADASTRO DE CLIENTES");
+            Cliente novo_cliente;
+
+            do {
+                novo_cliente = setDadosCliente();
+            } while (!Utilidades.validarDadosCliente(novo_cliente, clientesLista, "cadastrar"));
+
+            opcao = Utilidades.confirmaOperacao();
+            if (opcao.equalsIgnoreCase("S")) {
+                clientesLista.inserirCliente(novo_cliente);
+                System.out.println("Cliente cadastrado com sucesso.");
+            }
+            opcao = Utilidades.getRepetirOperacao();
+
+        } while (opcao.equalsIgnoreCase("S"));
+    }
+
+    public static void alterarCliente(ClientesLista clientesLista) throws InputMismatchException {
+        String escolha;
+        String continuar = "S";
+        boolean is_valid;
+        do {
+            Scanner scanner = new Scanner(System.in);
+
+            System.out.println("ALTERAÇÃO DE CLIENTE");
+            System.out.println("Informe o ID do cliente a ser alterado: ");
+            int cliente_id = scanner.nextInt();
+
+            Cliente cliente = clientesLista.listarClientePorID(cliente_id);
+
+            if (cliente != null) {
+                System.out.println("CLIENTE ENCONTRADO\n");
+                Cliente cliente_alterar;
+
+                do {
+                    cliente_alterar = setDadosCliente();
+                    is_valid = Utilidades.validarDadosCliente(cliente_alterar, clientesLista, "atualizar");
+
+                    if (cliente_alterar.getCpf().equalsIgnoreCase(cliente.getCpf()) && is_valid) {
+                        escolha = Utilidades.confirmaOperacao();
+                        if (escolha.equalsIgnoreCase("S")) {
+                            clientesLista.atualizarCliente(cliente_id, cliente_alterar);
+                            System.out.println("Dados do cliente alterados com sucesso.");
+                            continuar = "N";
+                        }
+                    }
+                    else {
+                        System.out.println("O cpf do cliente não pode ser alterado! " +
+                                "Para tal deve-se excluí-lo e recadastrá-lo");
+                        is_valid = false;
+                        continuar = Utilidades.getRepetirOperacao();
+                    }
+                } while (!is_valid || continuar.equalsIgnoreCase("S"));
+            }
+            else {
+                Utilidades.mensagemConsultaNaoEncontrada();
+            }
+
+            escolha = Utilidades.getRepetirOperacao();
+
+        } while (escolha.equalsIgnoreCase("S"));
+    }
+
+    public static void excluirCliente(ClientesLista clientesLista) throws InputMismatchException {
+        String escolha;
+        do {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("EXCLUSÃO DE CLIENTES");
+            System.out.println("Informe o ID do cliente a ser excluído: ");
+            int cliente_id = scanner.nextInt();
+
+            Cliente cliente = clientesLista.listarClientePorID(cliente_id);
+
+            if (cliente != null) {
+                System.out.println("CLIENTE ENCONTRADO\n");
+                System.out.println(cliente);
+                escolha = Utilidades.confirmaOperacao();
+                if (escolha.equalsIgnoreCase(("S"))) {
+                    clientesLista.excluirCliente(cliente_id);
+                    System.out.println("CLIENTE DELETADO!\n");
+                }
+            }
+            else {
+                Utilidades.mensagemConsultaNaoEncontrada();
+            }
+
+            escolha = Utilidades.getRepetirOperacao();
+
+        } while (escolha.equalsIgnoreCase("S"));
+    }
+
+    public static void consultarCliente(ClientesLista clientesLista) throws InputMismatchException{
+        String escolha;
+        do {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("CONSULTAR CLIENTE");
+            System.out.println("Informe o cpf do cliente a ser pesquisado: ");
+            String cliente_cpf = scanner.nextLine();
+
+            Cliente cliente = clientesLista.listarClientePorCpf(cliente_cpf);
+
+            if (cliente != null) {
+                System.out.println("CLIENTE ENCONTRADO\n");
+                System.out.println(cliente);
+            }
+            else {
+                Utilidades.mensagemConsultaNaoEncontrada();
+            }
+
+            escolha = Utilidades.getRepetirOperacao();
+
+        } while (escolha.equalsIgnoreCase("S"));
+    }
+
+    private static Cliente setDadosCliente() throws InputMismatchException{
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Informe o nome do cliente: ");
+        String nome = scanner.nextLine();
+
+        System.out.println("Informe a idade do cliente: ");
+        short idade = Short.parseShort(scanner.nextLine());
+
+        System.out.println("Informe o cpf do cliente: ");
+        String cpf = scanner.nextLine();
+
+        return new Cliente(nome, idade, cpf);
+    }
+
+    public static void relatorioDeClientes(ClientesLista clientesLista) {
+        System.out.println("RELATÓRIO\n");
+        clientesLista.listarClientes();
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("APERTE QUALQUER LETRA + ENTER PARA CONTINUAR");

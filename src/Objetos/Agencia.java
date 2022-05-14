@@ -43,7 +43,7 @@ public class Agencia {
         }
 
         return this.numero == ((Agencia) o).getNumero()
-                || this.nome.equals(((Agencia) o).getNome());
+                && this.nome.equals(((Agencia) o).getNome());
     }
 
     @Override
@@ -53,7 +53,7 @@ public class Agencia {
     }
 
     public String dataString() {
-        return String.format("%d - %s - %d",
+        return String.format("%d - %s - %d\n",
                 this.getID(), this.getNome(), this.getNumero());
     }
 }

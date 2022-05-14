@@ -1,13 +1,14 @@
 package Objetos;
 
+import java.util.Objects;
+
 public class Cliente {
-    private final int ID;
+    private int ID;
     private String nome;
     private short idade;
     private final String cpf;
 
-    Cliente(int id, String nome, short idade, String cpf) {
-        ID = id;
+    public Cliente(String nome, short idade, String cpf) {
         this.nome = nome;
         this.idade = idade;
         this.cpf = cpf;
@@ -17,6 +18,9 @@ public class Cliente {
         return this.ID;
     }
 
+    protected void setID(int ID) {
+        this.ID = ID;
+    }
     public String getNome() {
         return nome;
     }
@@ -38,7 +42,25 @@ public class Cliente {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        else if (!(o instanceof Cliente)) {
+            return false;
+        }
+
+        return this.cpf.equalsIgnoreCase(((Cliente) o).getCpf())
+                && this.nome.equalsIgnoreCase(((Cliente) o).getNome()) && this.idade == ((Cliente) o).getIdade();
+    }
+
+    @Override
     public String toString() {
         return String.format("Nome: %s - Idade: %s - CPF: %s", nome, idade, cpf);
+    }
+
+    public String dataString() {
+        return String.format("%d - %s - %d - %s\n",
+                this.getID(), this.getNome(), this.getIdade(), this.getCpf());
     }
 }
