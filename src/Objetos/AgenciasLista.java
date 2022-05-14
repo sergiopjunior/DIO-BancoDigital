@@ -1,5 +1,7 @@
 package Objetos;
 
+import java.io.*;
+
 class NoAgencia {
     private Agencia elemento;
     private NoAgencia anterior;
@@ -39,11 +41,10 @@ public class AgenciasLista {
     private NoAgencia primeiro_no;
     private NoAgencia ultimo_no;
     private int tamanho = 0;
-    private int proximo_codigo = 0;
+    private int proximo_codigo = 1;
 
 
     public AgenciasLista() {
-        this.setProximoCodigo();
     }
 
     public int getTamanho() {
@@ -62,14 +63,82 @@ public class AgenciasLista {
         this.proximo_codigo += 1;
     }
 
+    public void carregarDados() throws IOException {
+        String path = new File (".").getCanonicalPath();
+        File file = new File(path + "/src/agencias.txt");
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] data = line.split(" - ");
+            Agencia agencia = new Agencia(Short.parseShort(data[2]), data[1]);
+            agencia.setID(Integer.parseInt(data[0]));
+            this.inserirAgencia(agencia);
+        }
+        file = new File(path + "/src/system.txt");
+        br = new BufferedReader(new FileReader(file));
+        while ((line = br.readLine()) != null) {
+            String[] data = line.split(" - ");
+            if (data[0].equalsIgnoreCase("AgenciaNextID")) {
+                this.proximo_codigo = Integer.parseInt(data[1]);
+                break;
+            }
+        }
+        br.close();
+    }
+
+    public void salvarDados() throws IOException {
+        String path = new File (".").getCanonicalPath();
+        PrintWriter out = new PrintWriter(path + "/src/system.txt");
+        out.println(String.format("AgenciaNextID - %d", this.proximo_codigo));
+        out.close();
+
+        PrintWriter out2 = new PrintWriter(path + "/src/agencias.txt");
+
+        NoAgencia cabeca = this.primeiro_no;
+        while (cabeca != null) {
+            out2.println(cabeca.getElemento().dataString());
+            cabeca = cabeca.getProximo();
+        }
+        out2.close();
+    }
+    public boolean contem(Agencia agencia) {
+        NoAgencia cabeca = this.primeiro_no;
+
+        while (cabeca != null) {
+            if (cabeca.getElemento() == agencia) return true;
+            cabeca = cabeca.getProximo();
+        }
+        return false;
+    }
+
+    private NoAgencia buscarNoPorNome(String produto_nome) {
+        NoAgencia cabeca = this.primeiro_no;
+
+        while(cabeca != null) {
+            if (cabeca.getElemento().getNome().equalsIgnoreCase(produto_nome)) break;
+            cabeca = cabeca.getProximo();
+        }
+
+        return cabeca;
+    }
+
+    private NoAgencia buscarNoPorNumero(short numero) {
+        NoAgencia cabeca = this.primeiro_no;
+
+        while(cabeca != null) {
+            if (cabeca.getElemento().getNumero() == numero) break;
+            cabeca = cabeca.getProximo();
+        }
+
+        return cabeca;
+    }
+
     public void inserirAgencia(Agencia nova_agencia) {
-        nova_agencia.setID(this.getProximoCodigo());
+        if (nova_agencia.getID() <= 0) nova_agencia.setID(this.getProximoCodigo());
         NoAgencia novo_no = new NoAgencia();
         novo_no.setElemento(nova_agencia);
 
-        if (this.getTamanho() == 0) {
-            this.primeiro_no = novo_no;
-        }
+        if (this.getTamanho() == 0) this.primeiro_no = novo_no;
         else {
             this.ultimo_no.setProximo(novo_no);
             novo_no.setAnterior(this.ultimo_no);
@@ -79,8 +148,8 @@ public class AgenciasLista {
         this.setProximoCodigo();
     }
 
-    public void excluirAgencia(String agencia_nome) {
-        NoAgencia no_excluir = this.buscarNoPorNome(agencia_nome);
+    public void excluirAgencia(short agencia_numero) {
+        NoAgencia no_excluir = this.buscarNoPorNumero(agencia_numero);
         NoAgencia no_anterior;
         NoAgencia no_proximo;
 
@@ -112,32 +181,27 @@ public class AgenciasLista {
         System.gc();
     }
 
-    public void atualizarAgencia(String agencia_nome, Agencia agencia_alterada) {
-        NoAgencia no_agencia = buscarNoPorNome(agencia_nome);
+    public void atualizarAgencia(short agencia_numero, Agencia agencia_alterada) {
+        NoAgencia no_agencia = buscarNoPorNumero(agencia_numero);
 
         no_agencia.getElemento().setNome(agencia_alterada.getNome());
+        no_agencia.getElemento().setNumero(agencia_alterada.getNumero());
     }
 
-    private NoAgencia buscarNoPorNome(String produto_nome) {
-        NoAgencia cabeca = this.primeiro_no;
-
-        while(cabeca != null) {
-            if (cabeca.getElemento().getNome().equalsIgnoreCase(produto_nome)) {
-                break;
-            }
-            cabeca = cabeca.getProximo();
-        }
-
-        return cabeca;
-    }
-
-    public Agencia listarAgenciaPorNome(String Agencia_nome) {
-        NoAgencia no_agencia = this.buscarNoPorNome(Agencia_nome);
+    public Agencia listarAgenciaPorNome(String agencia_nome) {
+        NoAgencia no_agencia = this.buscarNoPorNome(agencia_nome);
         Agencia result = null;
 
-        if (no_agencia != null) {
-            result = no_agencia.getElemento();
-        }
+        if (no_agencia != null) result = no_agencia.getElemento();
+
+        return result;
+    }
+
+    public Agencia listarAgenciaPorNumero(short agencia_numero) {
+        NoAgencia no_agencia = this.buscarNoPorNumero(agencia_numero);
+        Agencia result = null;
+
+        if (no_agencia != null) result = no_agencia.getElemento();
 
         return result;
     }

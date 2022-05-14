@@ -2,7 +2,7 @@ package Objetos;
 
 public class Agencia {
     private int ID;
-    private final short numero;
+    private short numero;
     private String nome;
 
     public Agencia(short numero, String nome) {
@@ -22,11 +22,38 @@ public class Agencia {
         return this.numero;
     }
 
+    protected void setNumero(short numero) {
+        this.numero = numero;
+    }
     public String getNome(){
         return this.nome;
     }
 
-    public void setNome(String nome){
+    protected void setNome(String nome){
         this.nome = nome;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        else if (!(o instanceof Agencia)) {
+            return false;
+        }
+
+        return this.numero == ((Agencia) o).getNumero()
+                || this.nome.equals(((Agencia) o).getNome());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("ID: %d - Nome: %s - Número: %d",
+                this.getID(), this.getNome(), this.getNumero());
+    }
+
+    public String dataString() {
+        return String.format("%d - %s - %d",
+                this.getID(), this.getNome(), this.getNumero());
     }
 }
