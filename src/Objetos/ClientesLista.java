@@ -1,7 +1,6 @@
 package Objetos;
 
 import java.io.*;
-import java.util.Objects;
 
 class NoCliente {
     private Cliente elemento;
@@ -38,30 +37,11 @@ class NoCliente {
     }
 }
 
-public class ClientesLista {
+public class ClientesLista extends Lista {
     private NoCliente primeiro_no;
     private NoCliente ultimo_no;
-    private int tamanho = 0;
-    private int proximo_codigo = 1;
-
 
     public ClientesLista() {
-    }
-
-    public int getTamanho() {
-        return tamanho;
-    }
-
-    private void setTamanho(int valor) {
-        this.tamanho += valor;
-    }
-
-    private int getProximoCodigo() {
-        return proximo_codigo;
-    }
-
-    private void setProximoCodigo() {
-        this.proximo_codigo += 1;
     }
 
     public void carregarDados() throws IOException {
@@ -80,7 +60,7 @@ public class ClientesLista {
         while ((line = br.readLine()) != null) {
             String[] data = line.split(" - ");
             if (data[0].equalsIgnoreCase("ClienteNextID")) {
-                this.proximo_codigo = Integer.parseInt(data[1]);
+                this.setProximoCodigo(Integer.parseInt(data[1]));
                 System.out.println(data[1]);
                 break;
             }
@@ -93,7 +73,7 @@ public class ClientesLista {
 
         FileWriter fw = new FileWriter(path + "/src/system.txt", true);
         BufferedWriter bw = new BufferedWriter(fw);
-        bw.write(String.format("ClienteNextID - %d", this.proximo_codigo));
+        bw.write(String.format("ClienteNextID - %d", this.getProximoCodigo()));
 
         fw  = new FileWriter(path + "/src/clientes.txt", false);
         bw = new BufferedWriter(fw);

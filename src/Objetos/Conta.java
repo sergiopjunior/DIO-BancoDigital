@@ -7,26 +7,26 @@ import Excecoes.ValorZeradoException;
 import Modelos.IConta;
 
 public abstract class Conta implements IConta {
-    private final int ID;
-    private final Cliente titular;
-    private final long numero;
+    private int ID;
+    private final int clienteID;
+    private final String numero;
     private final int agenciaID;
     private final String tipo_conta;
-    private double saldo = 0;
+    private double saldo;
     private final double taxa_transferencia;
     private final double taxa_saque;
     private final double deposito_limite;
     private final double saque_limite;
     private final double transferencia_limite;
 
-    public Conta(int id, Cliente titular, long numero, int agenciaID,
-                 String tipo_conta, double deposito_limite, double saque_limite,
+    public Conta(int clienteID, String numero, int agenciaID,
+                 String tipo_conta, double saldo, double deposito_limite, double saque_limite,
                  double transferencia_limite, double taxa_transferencia, double taxa_saque){
-        this.ID = id;
-        this.titular = titular;
+        this.clienteID = clienteID;
         this.numero = numero;
         this.agenciaID = agenciaID;
         this.tipo_conta = tipo_conta;
+        this.saldo = saldo;
         this.deposito_limite = deposito_limite;
         this.saque_limite = saque_limite;
         this.transferencia_limite = transferencia_limite;
@@ -77,11 +77,15 @@ public abstract class Conta implements IConta {
         return ID;
     }
 
-    public Cliente getTitular() {
-        return titular;
+    protected void setID(int codigo) {
+        this.ID = codigo;
     }
 
-    public long getNumero() {
+    public int getClienteID() {
+        return clienteID;
+    }
+
+    public String getNumero() {
         return numero;
     }
 
@@ -115,5 +119,16 @@ public abstract class Conta implements IConta {
 
     public double getTransferencia_limite() {
         return transferencia_limite;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Número: %s - Agência: %d - Tipo: %s - ClienteID: %d - Saldo: %f\n",
+                this.getNumero(), this.getAgenciaID(), this.getTipo_conta(), this.getClienteID(), this.getSaldo());
+    }
+
+    public String dataString() {
+        return String.format("%d - %d - %s - %d - %s - %f\n",
+                this.getID(), this.getClienteID(), this.getNumero(), this.getAgenciaID(), this.getTipo_conta(), this.getSaldo());
     }
 }

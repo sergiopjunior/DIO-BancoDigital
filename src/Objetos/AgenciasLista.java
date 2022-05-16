@@ -37,30 +37,11 @@ class NoAgencia {
     }
 }
 
-public class AgenciasLista {
+public class AgenciasLista extends Lista {
     private NoAgencia primeiro_no;
     private NoAgencia ultimo_no;
-    private int tamanho = 0;
-    private int proximo_codigo = 1;
-
 
     public AgenciasLista() {
-    }
-
-    public int getTamanho() {
-        return tamanho;
-    }
-
-    private void setTamanho(int valor) {
-        this.tamanho += valor;
-    }
-
-    private int getProximoCodigo() {
-        return proximo_codigo;
-    }
-
-    private void setProximoCodigo() {
-        this.proximo_codigo += 1;
     }
 
     public void carregarDados() throws IOException {
@@ -79,7 +60,7 @@ public class AgenciasLista {
         while ((line = br.readLine()) != null) {
             String[] data = line.split(" - ");
             if (data[0].equalsIgnoreCase("AgenciaNextID")) {
-                this.proximo_codigo = Integer.parseInt(data[1]);
+                this.setProximoCodigo(Integer.parseInt(data[1]));
                 break;
             }
         }
@@ -91,7 +72,7 @@ public class AgenciasLista {
 
         FileWriter fw = new FileWriter(path + "/src/system.txt", true);
         BufferedWriter bw = new BufferedWriter(fw);
-        bw.write(String.format("AgenciaNextID - %d", this.proximo_codigo));
+        bw.write(String.format("AgenciaNextID - %d", this.getProximoCodigo()));
 
         fw = new FileWriter(path + "/src/agencias.txt", false);
         bw = new BufferedWriter(fw);
