@@ -2,44 +2,9 @@ package Objetos;
 
 import java.io.*;
 
-class NoCliente {
-    private Cliente elemento;
-    private NoCliente anterior;
-    private NoCliente proximo;
-
-    public Cliente getElemento() {
-        return elemento;
-    }
-
-    public void setElemento(Cliente elemento) {
-        this.elemento = elemento;
-    }
-
-    public NoCliente getAnterior() {
-        return anterior;
-    }
-
-    public void setAnterior(NoCliente anterior) {
-        this.anterior = anterior;
-    }
-
-    public NoCliente getProximo() {
-        return proximo;
-    }
-
-    public void setProximo(NoCliente proximo) {
-        this.proximo = proximo;
-    }
-
-    @Override
-    public String toString() {
-        return this.getElemento().toString();
-    }
-}
-
 public class ClientesLista extends Lista {
-    private NoCliente primeiro_no;
-    private NoCliente ultimo_no;
+    private No<Cliente> primeiro_no;
+    private No<Cliente> ultimo_no;
 
     public ClientesLista() {
     }
@@ -51,7 +16,8 @@ public class ClientesLista extends Lista {
         String line;
         while ((line = br.readLine()) != null) {
             String[] data = line.split(" - ");
-            Cliente cliente = new Cliente(data[1], Short.parseShort(data[2]), data[3]);
+            Cliente cliente = new Cliente();
+            cliente.Setup(data[1], Short.parseShort(data[2]), data[3]);
             cliente.setID(Integer.parseInt(data[0]));
             this.inserirCliente(cliente);
         }
@@ -78,7 +44,7 @@ public class ClientesLista extends Lista {
         fw  = new FileWriter(path + "/src/clientes.txt", false);
         bw = new BufferedWriter(fw);
 
-        NoCliente cabeca = this.primeiro_no;
+        No<Cliente> cabeca = this.primeiro_no;
         while (cabeca != null) {
             bw.write(cabeca.getElemento().dataString());
             cabeca = cabeca.getProximo();
@@ -86,7 +52,7 @@ public class ClientesLista extends Lista {
         bw.close();
     }
     public boolean contem(Cliente cliente) {
-        NoCliente cabeca = this.primeiro_no;
+        No<Cliente> cabeca = this.primeiro_no;
 
         while (cabeca != null) {
             if (cabeca.getElemento() == cliente) return true;
@@ -95,8 +61,8 @@ public class ClientesLista extends Lista {
         return false;
     }
 
-    private NoCliente buscarNoPorID(int ID) {
-        NoCliente cabeca = this.primeiro_no;
+    private No<Cliente> buscarNoPorID(int ID) {
+        No<Cliente> cabeca = this.primeiro_no;
 
         while(cabeca != null) {
             if (cabeca.getElemento().getID() == ID) break;
@@ -106,8 +72,8 @@ public class ClientesLista extends Lista {
         return cabeca;
     }
 
-    private NoCliente buscarNoPorNome(String produto_nome) {
-        NoCliente cabeca = this.primeiro_no;
+    private No<Cliente> buscarNoPorNome(String produto_nome) {
+        No<Cliente> cabeca = this.primeiro_no;
 
         while(cabeca != null) {
             if (cabeca.getElemento().getNome().equalsIgnoreCase(produto_nome)) break;
@@ -117,8 +83,8 @@ public class ClientesLista extends Lista {
         return cabeca;
     }
 
-    private NoCliente buscarNoPorCpf(String cpf) {
-        NoCliente cabeca = this.primeiro_no;
+    private No<Cliente> buscarNoPorCpf(String cpf) {
+        No<Cliente> cabeca = this.primeiro_no;
 
         while(cabeca != null) {
             if (cabeca.getElemento().getCpf().equalsIgnoreCase(cpf)) break;
@@ -130,7 +96,7 @@ public class ClientesLista extends Lista {
 
     public void inserirCliente(Cliente novo_cliente) {
         if (novo_cliente.getID() <= 0) novo_cliente.setID(this.getProximoCodigo());
-        NoCliente novo_no = new NoCliente();
+        No<Cliente> novo_no = new No<>(Cliente::new);
         novo_no.setElemento(novo_cliente);
 
         if (this.getTamanho() == 0) this.primeiro_no = novo_no;
@@ -144,9 +110,9 @@ public class ClientesLista extends Lista {
     }
 
     public void excluirCliente(int cliente_id) {
-        NoCliente no_excluir = this.buscarNoPorID(cliente_id);
-        NoCliente no_anterior;
-        NoCliente no_proximo;
+        No<Cliente> no_excluir = this.buscarNoPorID(cliente_id);
+        No<Cliente> no_anterior;
+        No<Cliente> no_proximo;
 
         if (this.getTamanho() == 1) {
             this.primeiro_no = null;
@@ -177,14 +143,14 @@ public class ClientesLista extends Lista {
     }
 
     public void atualizarCliente(int ID, Cliente cliente_alterado) {
-        NoCliente no_cliente = buscarNoPorID(ID);
+        No<Cliente> no_cliente = buscarNoPorID(ID);
 
         no_cliente.getElemento().setNome(cliente_alterado.getNome());
         no_cliente.getElemento().setIdade(cliente_alterado.getIdade());
     }
 
     public Cliente listarClientePorID(int ID) {
-        NoCliente no_cliente = this.buscarNoPorID(ID);
+        No<Cliente> no_cliente = this.buscarNoPorID(ID);
         Cliente result = null;
 
         if (no_cliente != null) result = no_cliente.getElemento();
@@ -193,7 +159,7 @@ public class ClientesLista extends Lista {
     }
 
     public Cliente listarClientePorNome(String cliente_nome) {
-        NoCliente no_cliente = this.buscarNoPorNome(cliente_nome);
+        No<Cliente> no_cliente = this.buscarNoPorNome(cliente_nome);
         Cliente result = null;
 
         if (no_cliente != null) result = no_cliente.getElemento();
@@ -202,7 +168,7 @@ public class ClientesLista extends Lista {
     }
 
     public Cliente listarClientePorCpf(String cliente_cpf) {
-        NoCliente no_cliente = this.buscarNoPorCpf(cliente_cpf);
+        No<Cliente> no_cliente = this.buscarNoPorCpf(cliente_cpf);
         Cliente result = null;
 
         if (no_cliente != null) result = no_cliente.getElemento();
@@ -212,7 +178,7 @@ public class ClientesLista extends Lista {
 
     public void listarClientes() {
         if (this.getTamanho() > 0) {
-            NoCliente cabeca = this.primeiro_no;
+            No<Cliente> cabeca = this.primeiro_no;
 
             while (cabeca != null) {
                 System.out.println(cabeca);

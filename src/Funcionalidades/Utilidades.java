@@ -1,4 +1,4 @@
-package Utilidades;
+package Funcionalidades;
 
 import Objetos.AgenciasLista;
 import Objetos.Agencia;
@@ -57,10 +57,10 @@ public final class Utilidades {
             }
         }
         else if (compare_numero != null && !compare_numero.equals(agencia)) {
-            mensagemDeErro += String.format("- Agência com número \"%d\" já cadastrada\n", agencia.getNumero());
+            mensagemDeErro += String.format("- Agência com número \"%s\" já cadastrada\n", agencia.getNumero());
             erros += 1;
         }
-        else if (agencia.getNumero() <= 0) {
+        else if (Integer.parseInt(agencia.getNumero()) <= 0) {
             mensagemDeErro += "- O numero da agência deve ser maior que zero\n";
             erros += 1;
         }

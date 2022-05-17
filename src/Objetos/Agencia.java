@@ -2,10 +2,13 @@ package Objetos;
 
 public class Agencia {
     private int ID;
-    private short numero;
+    private String numero;
     private String nome;
 
-    public Agencia(short numero, String nome) {
+    public Agencia() {
+    }
+
+    public void Setup(String numero, String nome) {
         this.numero = numero;
         this.nome = nome;
     }
@@ -18,11 +21,11 @@ public class Agencia {
         this.ID = codigo;
     }
 
-    public short getNumero(){
+    public String getNumero(){
         return this.numero;
     }
 
-    protected void setNumero(short numero) {
+    protected void setNumero(String numero) {
         this.numero = numero;
     }
     public String getNome(){
@@ -42,18 +45,18 @@ public class Agencia {
             return false;
         }
 
-        return this.numero == ((Agencia) o).getNumero()
+        return this.numero.equals(((Agencia) o).getNumero())
                 && this.nome.equals(((Agencia) o).getNome());
     }
 
     @Override
     public String toString() {
-        return String.format("ID: %d - Nome: %s - Número: %d",
+        return String.format("ID: %d - Nome: %s - Número: %s",
                 this.getID(), this.getNome(), this.getNumero());
     }
 
     public String dataString() {
-        return String.format("%d - %s - %d\n",
+        return String.format("%d - %s - %s\n",
                 this.getID(), this.getNome(), this.getNumero());
     }
 }

@@ -1,4 +1,4 @@
-package Utilidades;
+package Funcionalidades;
 
 import Objetos.AgenciasLista;
 import Objetos.Agencia;
@@ -41,7 +41,7 @@ public final class Operacoes {
 
             System.out.println("ALTERAÇÃO DE AGÊNCIA");
             System.out.println("Informe o número da agência a ser alterada: ");
-            short agencia_numero = scanner.nextShort();
+            String agencia_numero = scanner.nextLine();
 
             Agencia agencia = agenciasLista.listarAgenciaPorNumero(agencia_numero);
 
@@ -53,7 +53,7 @@ public final class Operacoes {
                     agencia_alterar = setDadosAgencia();
                     is_valid = Utilidades.validarDadosAgencia(agencia_alterar, agenciasLista, "atualizar");
 
-                    if (agencia_alterar.getNumero() == agencia_numero && is_valid) {
+                    if (agencia_alterar.getNumero().equalsIgnoreCase(agencia_numero) && is_valid) {
                         escolha = Utilidades.confirmaOperacao();
                         if (escolha.equalsIgnoreCase("S")) {
                             agenciasLista.atualizarAgencia(agencia_numero, agencia_alterar);
@@ -84,7 +84,7 @@ public final class Operacoes {
             Scanner scanner = new Scanner(System.in);
             System.out.println("EXCLUSÃO DE AGÊNCIAS");
             System.out.println("Informe o número da agência a ser excluída: ");
-            short agencia_numero = scanner.nextShort();
+            String agencia_numero = scanner.nextLine();
 
             Agencia agencia = agenciasLista.listarAgenciaPorNumero(agencia_numero);
 
@@ -112,7 +112,7 @@ public final class Operacoes {
             Scanner scanner = new Scanner(System.in);
             System.out.println("CONSULTAR AGÊNCIA");
             System.out.println("Informe o número da agência a ser pesquisada: ");
-            short agencia_numero = scanner.nextShort();
+            String agencia_numero = scanner.nextLine();
 
             Agencia agencia = agenciasLista.listarAgenciaPorNumero(agencia_numero);
 
@@ -136,9 +136,12 @@ public final class Operacoes {
         String nome = scanner.nextLine();
 
         System.out.println("Informe o número da agência: ");
-        short numero = scanner.nextShort();
+        String numero = scanner.nextLine();
 
-        return new Agencia(numero, nome);
+        Agencia agencia = new Agencia();
+        agencia.Setup(numero, nome);
+
+        return agencia;
     }
 
     public static void relatorioDeAgencias(AgenciasLista agenciasLista) {
@@ -280,7 +283,10 @@ public final class Operacoes {
         System.out.println("Informe o cpf do cliente: ");
         String cpf = scanner.nextLine();
 
-        return new Cliente(nome, idade, cpf);
+        Cliente cliente = new Cliente();
+        cliente.Setup(nome, idade, cpf);
+
+        return cliente;
     }
 
     public static void relatorioDeClientes(ClientesLista clientesLista) {

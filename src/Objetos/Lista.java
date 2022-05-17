@@ -1,5 +1,8 @@
 package Objetos;
 
+import java.util.Objects;
+import java.util.function.Supplier;
+
 public class Lista {
     private int tamanho = 0;
     private int proximo_codigo = 1;

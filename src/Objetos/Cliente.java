@@ -6,9 +6,12 @@ public class Cliente {
     private int ID;
     private String nome;
     private short idade;
-    private final String cpf;
+    private String cpf;
 
-    public Cliente(String nome, short idade, String cpf) {
+    public Cliente() {
+    }
+
+    public void Setup(String nome, short idade, String cpf) {
         this.nome = nome;
         this.idade = idade;
         this.cpf = cpf;

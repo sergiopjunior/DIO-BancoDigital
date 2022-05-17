@@ -2,44 +2,9 @@ package Objetos;
 
 import java.io.*;
 
-class NoAgencia {
-    private Agencia elemento;
-    private NoAgencia anterior;
-    private NoAgencia proximo;
-
-    public Agencia getElemento() {
-        return elemento;
-    }
-
-    public void setElemento(Agencia elemento) {
-        this.elemento = elemento;
-    }
-
-    public NoAgencia getAnterior() {
-        return anterior;
-    }
-
-    public void setAnterior(NoAgencia anterior) {
-        this.anterior = anterior;
-    }
-
-    public NoAgencia getProximo() {
-        return proximo;
-    }
-
-    public void setProximo(NoAgencia proximo) {
-        this.proximo = proximo;
-    }
-
-    @Override
-    public String toString() {
-        return this.getElemento().toString();
-    }
-}
-
 public class AgenciasLista extends Lista {
-    private NoAgencia primeiro_no;
-    private NoAgencia ultimo_no;
+    private No<Agencia> primeiro_no;
+    private No<Agencia> ultimo_no;
 
     public AgenciasLista() {
     }
@@ -51,7 +16,8 @@ public class AgenciasLista extends Lista {
         String line;
         while ((line = br.readLine()) != null) {
             String[] data = line.split(" - ");
-            Agencia agencia = new Agencia(Short.parseShort(data[2]), data[1]);
+            Agencia agencia = new Agencia();
+            agencia.Setup(data[2], data[1]);
             agencia.setID(Integer.parseInt(data[0]));
             this.inserirAgencia(agencia);
         }
@@ -77,7 +43,7 @@ public class AgenciasLista extends Lista {
         fw = new FileWriter(path + "/src/agencias.txt", false);
         bw = new BufferedWriter(fw);
 
-        NoAgencia cabeca = this.primeiro_no;
+        No<Agencia> cabeca = this.primeiro_no;
         while (cabeca != null) {
             bw.write(cabeca.getElemento().dataString());
             cabeca = cabeca.getProximo();
@@ -85,7 +51,7 @@ public class AgenciasLista extends Lista {
         bw.close();
     }
     public boolean contem(Agencia agencia) {
-        NoAgencia cabeca = this.primeiro_no;
+        No<Agencia> cabeca = this.primeiro_no;
 
         while (cabeca != null) {
             if (cabeca.getElemento() == agencia) return true;
@@ -94,8 +60,8 @@ public class AgenciasLista extends Lista {
         return false;
     }
 
-    private NoAgencia buscarNoPorNome(String produto_nome) {
-        NoAgencia cabeca = this.primeiro_no;
+    private No<Agencia> buscarNoPorNome(String produto_nome) {
+        No<Agencia> cabeca = this.primeiro_no;
 
         while(cabeca != null) {
             if (cabeca.getElemento().getNome().equalsIgnoreCase(produto_nome)) break;
@@ -105,11 +71,11 @@ public class AgenciasLista extends Lista {
         return cabeca;
     }
 
-    private NoAgencia buscarNoPorNumero(short numero) {
-        NoAgencia cabeca = this.primeiro_no;
+    private No<Agencia> buscarNoPorNumero(String numero) {
+        No<Agencia> cabeca = this.primeiro_no;
 
         while(cabeca != null) {
-            if (cabeca.getElemento().getNumero() == numero) break;
+            if (cabeca.getElemento().getNumero().equalsIgnoreCase(numero)) break;
             cabeca = cabeca.getProximo();
         }
 
@@ -118,7 +84,7 @@ public class AgenciasLista extends Lista {
 
     public void inserirAgencia(Agencia nova_agencia) {
         if (nova_agencia.getID() <= 0) nova_agencia.setID(this.getProximoCodigo());
-        NoAgencia novo_no = new NoAgencia();
+        No<Agencia> novo_no = new No<>(Agencia::new);
         novo_no.setElemento(nova_agencia);
 
         if (this.getTamanho() == 0) this.primeiro_no = novo_no;
@@ -131,10 +97,10 @@ public class AgenciasLista extends Lista {
         this.setProximoCodigo();
     }
 
-    public void excluirAgencia(short agencia_numero) {
-        NoAgencia no_excluir = this.buscarNoPorNumero(agencia_numero);
-        NoAgencia no_anterior;
-        NoAgencia no_proximo;
+    public void excluirAgencia(String agencia_numero) {
+        No<Agencia> no_excluir = this.buscarNoPorNumero(agencia_numero);
+        No<Agencia> no_anterior;
+        No<Agencia> no_proximo;
 
         if (this.getTamanho() == 1) {
             this.primeiro_no = null;
@@ -164,15 +130,15 @@ public class AgenciasLista extends Lista {
         System.gc();
     }
 
-    public void atualizarAgencia(short agencia_numero, Agencia agencia_alterada) {
-        NoAgencia no_agencia = buscarNoPorNumero(agencia_numero);
+    public void atualizarAgencia(String agencia_numero, Agencia agencia_alterada) {
+        No<Agencia> no_agencia = buscarNoPorNumero(agencia_numero);
 
         no_agencia.getElemento().setNome(agencia_alterada.getNome());
         no_agencia.getElemento().setNumero(agencia_alterada.getNumero());
     }
 
     public Agencia listarAgenciaPorNome(String agencia_nome) {
-        NoAgencia no_agencia = this.buscarNoPorNome(agencia_nome);
+        No<Agencia> no_agencia = this.buscarNoPorNome(agencia_nome);
         Agencia result = null;
 
         if (no_agencia != null) result = no_agencia.getElemento();
@@ -180,8 +146,8 @@ public class AgenciasLista extends Lista {
         return result;
     }
 
-    public Agencia listarAgenciaPorNumero(short agencia_numero) {
-        NoAgencia no_agencia = this.buscarNoPorNumero(agencia_numero);
+    public Agencia listarAgenciaPorNumero(String agencia_numero) {
+        No<Agencia> no_agencia = this.buscarNoPorNumero(agencia_numero);
         Agencia result = null;
 
         if (no_agencia != null) result = no_agencia.getElemento();
@@ -191,7 +157,7 @@ public class AgenciasLista extends Lista {
 
     public void listarAgencias() {
         if (this.getTamanho() > 0) {
-            NoAgencia cabeca = this.primeiro_no;
+            No<Agencia> cabeca = this.primeiro_no;
 
             while (cabeca != null) {
                 System.out.println(cabeca);
