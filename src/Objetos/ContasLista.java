@@ -2,44 +2,9 @@ package Objetos;
 
 import java.io.*;
 
-class NoConta {
-    private Conta elemento;
-    private NoConta anterior;
-    private NoConta proximo;
-
-    public Conta getElemento() {
-        return elemento;
-    }
-
-    public void setElemento(Conta elemento) {
-        this.elemento = elemento;
-    }
-
-    public NoConta getAnterior() {
-        return anterior;
-    }
-
-    public void setAnterior(NoConta anterior) {
-        this.anterior = anterior;
-    }
-
-    public NoConta getProximo() {
-        return proximo;
-    }
-
-    public void setProximo(NoConta proximo) {
-        this.proximo = proximo;
-    }
-
-    @Override
-    public String toString() {
-        return this.getElemento().toString();
-    }
-}
-
 public class ContasLista extends Lista {
-    private NoConta primeiro_no;
-    private NoConta ultimo_no;
+    private No<Conta> primeiro_no;
+    private No<Conta> ultimo_no;
 
     public ContasLista() {
     }
@@ -51,22 +16,21 @@ public class ContasLista extends Lista {
         String line;
         while ((line = br.readLine()) != null) {
             String[] data = line.split(" - ");
-            // this.getID(), this.getClienteID(), this.getNumero(), this.getAgenciaID(), this.getTipo_conta(), this.getSaldo()
             Conta conta = null;
             int id = Integer.parseInt(data[0]);
             int clienteID = Integer.parseInt(data[1]);
             String numero = data[2];
-            int agenciaID = Integer.parseInt(data[3]);
+            short agenciaID = Short.parseShort(data[3]);
             String tipo_conta = data[4];
             double saldo = Double.parseDouble(data[5]);
 
             if (tipo_conta.equalsIgnoreCase("Poupança"))
-                conta = new ContaPoupanca(clienteID, numero, agenciaID, saldo);
+                conta = new ContaPoupanca();
             else if (tipo_conta.equalsIgnoreCase("Corrente"))
-                conta = new ContaCorrente(clienteID, numero, agenciaID, saldo);
+                conta = new ContaCorrente();
 
             if (conta != null) {
-                conta.setID(Integer.parseInt(data[0]));
+                conta.Setup(id, agenciaID, clienteID, saldo);
                 this.inserirConta(conta);
             }
         }
@@ -93,7 +57,7 @@ public class ContasLista extends Lista {
         fw  = new FileWriter(path + "/src/contas.txt", false);
         bw = new BufferedWriter(fw);
 
-        NoConta cabeca = this.primeiro_no;
+        No<Conta> cabeca = this.primeiro_no;
         while (cabeca != null) {
             bw.write(cabeca.getElemento().dataString());
             cabeca = cabeca.getProximo();
@@ -101,7 +65,7 @@ public class ContasLista extends Lista {
         bw.close();
     }
     public boolean contem(Conta conta) {
-        NoConta cabeca = this.primeiro_no;
+        No<Conta> cabeca = this.primeiro_no;
 
         while (cabeca != null) {
             if (cabeca.getElemento() == conta) return true;
@@ -110,8 +74,8 @@ public class ContasLista extends Lista {
         return false;
     }
 
-    private NoConta buscarNoPorID(int ID) {
-        NoConta cabeca = this.primeiro_no;
+    private No<Conta> buscarNoPorID(int ID) {
+        No<Conta> cabeca = this.primeiro_no;
 
         while(cabeca != null) {
             if (cabeca.getElemento().getID() == ID) break;
@@ -121,23 +85,19 @@ public class ContasLista extends Lista {
         return cabeca;
     }
 
-    private NoConta buscarNoPorClienteID(int cliente_id) {
-        NoConta cabeca = this.primeiro_no;
-//        Cliente cliente = clientesLista.listarClientePorCpf(cliente_cpf);
-//        if (cliente == null) {
-//            System.out.printf("Nenhum cliente com o CPF '%s' encontrado.%n", cliente_cpf);
-//            return null
-//        }
+    private No<Conta> buscarNoPorClienteID(int cliente_id) {
+        No<Conta> cabeca = this.primeiro_no;
+
         while(cabeca != null) {
-            if (cabeca.getElemento().getID() == cliente_id) break;
+            if (cabeca.getElemento().getClienteID() == cliente_id) break;
             cabeca = cabeca.getProximo();
         }
 
         return cabeca;
     }
 
-    private NoConta buscarNoPorNumero(String numero) {
-        NoConta cabeca = this.primeiro_no;
+    private No<Conta> buscarNoPorNumero(String numero) {
+        No<Conta> cabeca = this.primeiro_no;
 
         while(cabeca != null) {
             if (cabeca.getElemento().getNumero().equalsIgnoreCase(numero)) break;
@@ -148,8 +108,8 @@ public class ContasLista extends Lista {
     }
 
     public void inserirConta(Conta nova_conta) {
-        if (nova_conta.getID() <= 0) nova_conta.setID(this.getProximoCodigo());
-        NoConta nova_no = new NoConta();
+        No<Conta> nova_no = nova_conta.getTipoConta().equalsIgnoreCase("Corrente") ?
+                new No<>(ContaCorrente::new) : new No<>(ContaPoupanca::new);
         nova_no.setElemento(nova_conta);
 
         if (this.getTamanho() == 0) this.primeiro_no = nova_no;
@@ -163,9 +123,9 @@ public class ContasLista extends Lista {
     }
 
     public void excluirConta(int conta_id) {
-        NoConta no_excluir = this.buscarNoPorID(conta_id);
-        NoConta no_anterior;
-        NoConta no_proximo;
+        No<Conta> no_excluir = this.buscarNoPorID(conta_id);
+        No<Conta> no_anterior;
+        No<Conta> no_proximo;
 
         if (this.getTamanho() == 1) {
             this.primeiro_no = null;
@@ -196,7 +156,7 @@ public class ContasLista extends Lista {
     }
 
     public Conta listarContaPorID(int ID) {
-        NoConta no_conta = this.buscarNoPorID(ID);
+        No<Conta> no_conta = this.buscarNoPorID(ID);
         Conta result = null;
 
         if (no_conta != null) result = no_conta.getElemento();
@@ -205,7 +165,7 @@ public class ContasLista extends Lista {
     }
 
     public Conta listarContaPorNumero(String conta_numero) {
-        NoConta no_conta = this.buscarNoPorNumero(conta_numero);
+        No<Conta> no_conta = this.buscarNoPorNumero(conta_numero);
         Conta result = null;
 
         if (no_conta != null) result = no_conta.getElemento();
@@ -214,7 +174,7 @@ public class ContasLista extends Lista {
     }
 
     public Conta listarContaPorClienteID(int cliente_id) {
-        NoConta no_conta = this.buscarNoPorClienteID(cliente_id);
+        No<Conta> no_conta = this.buscarNoPorClienteID(cliente_id);
         Conta result = null;
 
         if (no_conta != null) result = no_conta.getElemento();
@@ -224,7 +184,7 @@ public class ContasLista extends Lista {
 
     public void listarContas() {
         if (this.getTamanho() > 0) {
-            NoConta cabeca = this.primeiro_no;
+            No<Conta> cabeca = this.primeiro_no;
 
             while (cabeca != null) {
                 System.out.println(cabeca);

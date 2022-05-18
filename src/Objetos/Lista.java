@@ -15,7 +15,7 @@ public class Lista {
         this.tamanho += valor;
     }
 
-    protected int getProximoCodigo() {
+    public int getProximoCodigo() {
         return proximo_codigo;
     }
 

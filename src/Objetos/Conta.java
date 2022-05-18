@@ -8,9 +8,9 @@ import Modelos.IConta;
 
 public abstract class Conta implements IConta {
     private int ID;
-    private final int clienteID;
-    private final String numero;
-    private final int agenciaID;
+    private int clienteID;
+    private String numero;
+    private int agenciaID;
     private final String tipo_conta;
     private double saldo;
     private final double taxa_transferencia;
@@ -19,19 +19,66 @@ public abstract class Conta implements IConta {
     private final double saque_limite;
     private final double transferencia_limite;
 
-    public Conta(int clienteID, String numero, int agenciaID,
-                 String tipo_conta, double saldo, double deposito_limite, double saque_limite,
+    public Conta(String tipo_conta, double deposito_limite, double saque_limite,
                  double transferencia_limite, double taxa_transferencia, double taxa_saque){
-        this.clienteID = clienteID;
-        this.numero = numero;
-        this.agenciaID = agenciaID;
         this.tipo_conta = tipo_conta;
-        this.saldo = saldo;
         this.deposito_limite = deposito_limite;
         this.saque_limite = saque_limite;
         this.transferencia_limite = transferencia_limite;
         this.taxa_transferencia = taxa_transferencia;
         this.taxa_saque = taxa_saque;
+    }
+
+    public void Setup(int ID, int clienteID, int agenciaID, double saldo){
+        this.ID = ID;
+        this.clienteID = clienteID;
+        this.agenciaID = agenciaID;
+        this.saldo = saldo;
+        this.numero = String.valueOf(this.hashCode());
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public int getClienteID() {
+        return clienteID;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public int getAgenciaID() {
+        return agenciaID;
+    }
+
+    public String getTipoConta() {
+        return tipo_conta;
+    }
+
+    protected double getSaldo() {
+        return saldo;
+    }
+
+    protected void setSaldo(double valor) {
+        this.saldo += valor;
+    }
+
+    public double getTaxaTransferencia() {
+        return this.taxa_transferencia;
+    }
+
+    public double getDepositoLimite() {
+        return deposito_limite;
+    }
+
+    public double getSaqueLimite() {
+        return saque_limite;
+    }
+
+    public double getTransferenciaLimite() {
+        return transferencia_limite;
     }
 
     @Override
@@ -60,9 +107,9 @@ public abstract class Conta implements IConta {
 
     @Override
     public void sacar(int valor) throws Exception {
-        if (valor > this.getSaque_limite())
+        if (valor > this.saque_limite)
             throw new ValorLimiteAtingidoException(String.format("O valor R$%d supera o limite de R$%.2f para saques.\n",
-                    valor, this.getSaque_limite()));
+                    valor, this.saque_limite));
         else if (valor <= 0)
             throw new ValorZeradoException("O valor da operação deve ser maior que R$0,00.\n");
         else if (this.saldo - valor - this.taxa_saque < 0) {
@@ -73,62 +120,32 @@ public abstract class Conta implements IConta {
         this.setSaldo(-(valor - this.taxa_saque));
     }
 
-    public int getID() {
-        return ID;
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        else if (!(o instanceof Conta)) {
+            return false;
+        }
+
+        return this.numero.equals(((Conta) o).getNumero())
+                && this.agenciaID == ((Conta) o).getAgenciaID();
     }
 
-    protected void setID(int codigo) {
-        this.ID = codigo;
-    }
-
-    public int getClienteID() {
-        return clienteID;
-    }
-
-    public String getNumero() {
-        return numero;
-    }
-
-    public int getAgenciaID() {
-        return agenciaID;
-    }
-
-    public String getTipo_conta() {
-        return tipo_conta;
-    }
-
-    protected double getSaldo() {
-        return saldo;
-    }
-
-    protected void setSaldo(double valor) {
-        this.saldo += valor;
-    }
-
-    public double getTaxa_transferencia() {
-        return this.taxa_transferencia;
-    }
-
-    public double getDeposito_limite() {
-        return deposito_limite;
-    }
-
-    public double getSaque_limite() {
-        return saque_limite;
-    }
-
-    public double getTransferencia_limite() {
-        return transferencia_limite;
+    @Override
+    public int hashCode() {
+        return this.numero.hashCode() + this.tipo_conta.hashCode() + this.agenciaID + this.clienteID + this.ID;
     }
 
     @Override
     public String toString() {
         return String.format("Número: %s - Agência: %d - Tipo: %s - ClienteID: %d - Saldo: %f\n",
-                this.getNumero(), this.getAgenciaID(), this.getTipo_conta(), this.getClienteID(), this.getSaldo());
+                this.getNumero(), this.getAgenciaID(), this.tipo_conta, this.getClienteID(), this.getSaldo());
     }
 
     public String dataString() {
         return String.format("%d - %d - %s - %d - %s - %f\n",
-                this.getID(), this.getClienteID(), this.getNumero(), this.getAgenciaID(), this.getTipo_conta(), this.getSaldo());
+                this.getID(), this.getClienteID(), this.getNumero(), this.getAgenciaID(), this.tipo_conta, this.getSaldo());
     }
 }

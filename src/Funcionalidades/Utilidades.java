@@ -1,9 +1,6 @@
 package Funcionalidades;
 
-import Objetos.AgenciasLista;
-import Objetos.Agencia;
-import Objetos.Cliente;
-import Objetos.ClientesLista;
+import Objetos.*;
 
 import java.util.Scanner;
 
@@ -97,5 +94,40 @@ public final class Utilidades {
         }
 
         return true;
+    }
+
+    public static Conta validarDadosConta(ContaDados data, ContasLista contasLista, ClientesLista clientesLista, AgenciasLista agenciasLista, String operacao) {
+        short erros = 0;
+        String mensagemDeErro = "Os seguintes critérios de validação não foram atendidos:\n";
+
+        Conta nova_conta = data.tipo_conta().equalsIgnoreCase("Corrente") ? new ContaCorrente() : new ContaPoupanca();
+        Agencia agencia = agenciasLista.listarAgenciaPorNumero(data.agenciaNumero());
+        Cliente cliente= clientesLista.listarClientePorCpf(data.cpf());
+        if (agencia == null){
+            mensagemDeErro += String.format("- A agência de nº%s não existe\n", data.agenciaNumero());
+            erros += 1;
+        }
+        if (cliente == null) {
+            mensagemDeErro += String.format("- CPF-%s inválido", data.cpf());
+            erros += 1;
+        }
+        if (erros == 0) {
+            nova_conta.Setup(contasLista.getProximoCodigo(), cliente.getID(), agencia.getID(), 0);
+        }
+
+        if (operacao.equalsIgnoreCase("cadastrar") || operacao.equalsIgnoreCase("atualizar")) {
+            if (contasLista.contem(nova_conta)) {
+                mensagemDeErro += "- Conta já existente\n";
+                erros += 1;
+            }
+        }
+
+        if (erros > 0)
+        {
+            System.out.println(mensagemDeErro);
+            return null;
+        }
+
+        return nova_conta;
     }
 }

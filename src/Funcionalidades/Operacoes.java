@@ -1,12 +1,12 @@
 package Funcionalidades;
 
-import Objetos.AgenciasLista;
-import Objetos.Agencia;
-import Objetos.Cliente;
-import Objetos.ClientesLista;
+import Objetos.*;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
+record ContaDados(String tipo_conta, String cpf, String agenciaNumero) {
+}
 
 public final class Operacoes {
     private Operacoes() {}
@@ -292,6 +292,56 @@ public final class Operacoes {
     public static void relatorioDeClientes(ClientesLista clientesLista) {
         System.out.println("RELATÓRIO\n");
         clientesLista.listarClientes();
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("APERTE QUALQUER LETRA + ENTER PARA CONTINUAR");
+        scanner.next();
+    }
+    //        Conta cliente = clientesLista.listarContaPorCpf(cliente_cpf);
+//        if (cliente == null) {
+//            System.out.printf("Nenhum cliente com o CPF '%s' encontrado.%n", cliente_cpf);
+//            return null
+//        }
+    //////////////////////// Contas ////////////////////////
+    public static void cadastrarConta(ContasLista contasLista, ClientesLista clientesLista, AgenciasLista agenciasLista) {
+        String opcao;
+        do {
+            System.out.println("ABERTURA DE CONTAS");
+            ContaDados data;
+            Conta nova_conta;
+            do {
+                data = setDadosConta();
+                nova_conta = Utilidades.validarDadosConta(data, contasLista, clientesLista, agenciasLista, "cadastrar");
+            } while (nova_conta == null);
+
+            opcao = Utilidades.confirmaOperacao();
+            if (opcao.equalsIgnoreCase("S")) {
+                contasLista.inserirConta(nova_conta);
+                System.out.println("Conta aberta com sucesso.");
+            }
+            opcao = Utilidades.getRepetirOperacao();
+
+        } while (opcao.equalsIgnoreCase("S"));
+    }
+
+    private static ContaDados setDadosConta() throws InputMismatchException{
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Informe o CPF do titular: ");
+        String cpf = scanner.nextLine();
+
+        System.out.println("Escolha o tipo de conta. \n1- Corrente \n2- Poupança: ");
+        String tipo_conta = Short.parseShort(scanner.nextLine()) == 1 ? "Corrente" : "Poupança";
+
+        System.out.println("Informe o número da agência: ");
+        String numero = scanner.nextLine();
+
+        return new ContaDados(tipo_conta, cpf, numero);
+    }
+
+    public static void relatorioDeContas(ContasLista contasLista) {
+        System.out.println("RELATÓRIO\n");
+        contasLista.listarContas();
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("APERTE QUALQUER LETRA + ENTER PARA CONTINUAR");
