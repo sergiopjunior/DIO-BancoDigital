@@ -297,11 +297,7 @@ public final class Operacoes {
         System.out.println("APERTE QUALQUER LETRA + ENTER PARA CONTINUAR");
         scanner.next();
     }
-    //        Conta cliente = clientesLista.listarContaPorCpf(cliente_cpf);
-//        if (cliente == null) {
-//            System.out.printf("Nenhum cliente com o CPF '%s' encontrado.%n", cliente_cpf);
-//            return null
-//        }
+
     //////////////////////// Contas ////////////////////////
     public static void cadastrarConta(ContasLista contasLista, ClientesLista clientesLista, AgenciasLista agenciasLista) {
         String opcao;
@@ -322,6 +318,62 @@ public final class Operacoes {
             opcao = Utilidades.getRepetirOperacao();
 
         } while (opcao.equalsIgnoreCase("S"));
+    }
+
+    public static void excluirConta(ContasLista contasLista) throws InputMismatchException {
+        String escolha;
+        do {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("EXCLUSÃO DE CLIENTES");
+            System.out.println("Informe o Nº da conta a ser fechada: ");
+            String conta_numero = scanner.nextLine();
+
+            Conta conta = contasLista.listarContaPorNumero(conta_numero);
+
+            if (conta != null) {
+                System.out.println("CONTA ENCONTRADA\n");
+                System.out.println(conta);
+                escolha = Utilidades.confirmaOperacao();
+                if (escolha.equalsIgnoreCase(("S"))) {
+                    contasLista.excluirConta(conta.getID());
+                    System.out.println("CONTA FECHADA!\n");
+                }
+            }
+            else {
+                Utilidades.mensagemConsultaNaoEncontrada();
+            }
+
+            escolha = Utilidades.getRepetirOperacao();
+
+        } while (escolha.equalsIgnoreCase("S"));
+    }
+
+    public static void consultarConta(ContasLista contasLista, ClientesLista clientesLista) throws InputMismatchException{
+        String escolha;
+        do {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("CONSULTAR CONTA");
+            System.out.println("Informe o Nº ou o cpf do titular da conta a ser pesquisada: ");
+            String numero_cpf = scanner.nextLine();
+
+            Conta conta;
+            conta = contasLista.listarContaPorNumero(numero_cpf);
+            if (conta == null) {
+                Cliente cliente = clientesLista.listarClientePorCpf(numero_cpf);
+                if (cliente != null)
+                    conta = contasLista.listarContaPorClienteID(cliente.getID());
+            }
+            if (conta != null) {
+                System.out.println("CONTA ENCONTRADA\n");
+                System.out.println(conta);
+            }
+            else {
+                Utilidades.mensagemConsultaNaoEncontrada();
+            }
+
+            escolha = Utilidades.getRepetirOperacao();
+
+        } while (escolha.equalsIgnoreCase("S"));
     }
 
     private static ContaDados setDadosConta() throws InputMismatchException{

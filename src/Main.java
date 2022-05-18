@@ -152,18 +152,16 @@ public class Main {
 								
 							    Menu
 					1 - INCLUSÃO
-					2 - ALTERAÇÃO
-					3 - EXCLUSÃO
-					4 - CONSULTA
-					5 - TRANSAÇÕES
+					2 - EXCLUSÃO
+					3 - CONSULTA
+					4 - TRANSAÇÕES
 					0 - RETORNAR
 					OPÇÃO:\040""");
             opcao = Utilidades.getEscolhaMenu();
             switch (opcao) {
                 case 1 -> Operacoes.cadastrarConta(this.contasLista, this.clientesLista, this.agenciasLista);
-                case 2 -> Operacoes.alterarCliente(this.clientesLista);
-                case 3 -> Operacoes.excluirCliente(this.clientesLista);
-                case 4 -> Operacoes.consultarCliente(this.clientesLista);
+                case 2 -> Operacoes.excluirConta(this.contasLista);
+                case 3 -> Operacoes.consultarConta(this.contasLista, this.clientesLista);
                 case 0 -> System.out.println("Retornando para o Menu Principal...\n");
                 default -> opcaoInvalida();
             }

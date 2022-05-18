@@ -104,7 +104,7 @@ public final class Utilidades {
         Agencia agencia = agenciasLista.listarAgenciaPorNumero(data.agenciaNumero());
         Cliente cliente= clientesLista.listarClientePorCpf(data.cpf());
         if (agencia == null){
-            mensagemDeErro += String.format("- A agência de nº%s não existe\n", data.agenciaNumero());
+            mensagemDeErro += String.format("- A agência de Nº%s não existe\n", data.agenciaNumero());
             erros += 1;
         }
         if (cliente == null) {
