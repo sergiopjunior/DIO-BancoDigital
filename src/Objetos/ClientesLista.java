@@ -72,11 +72,11 @@ public class ClientesLista extends Lista {
         return cabeca;
     }
 
-    private No<Cliente> buscarNoPorNome(String produto_nome) {
+    private No<Cliente> buscarNoPorNome(String cliente_nome) {
         No<Cliente> cabeca = this.primeiro_no;
 
         while(cabeca != null) {
-            if (cabeca.getElemento().getNome().equalsIgnoreCase(produto_nome)) break;
+            if (cabeca.getElemento().getNome().equalsIgnoreCase(cliente_nome)) break;
             cabeca = cabeca.getProximo();
         }
 

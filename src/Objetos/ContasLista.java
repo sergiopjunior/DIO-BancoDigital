@@ -1,6 +1,8 @@
 package Objetos;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContasLista extends Lista {
     private No<Conta> primeiro_no;
@@ -173,13 +175,16 @@ public class ContasLista extends Lista {
         return result;
     }
 
-    public Conta listarContaPorClienteID(int cliente_id) {
-        No<Conta> no_conta = this.buscarNoPorClienteID(cliente_id);
-        Conta result = null;
+    public List<Conta> listarContasPorClienteID(int cliente_id) {
+        List<Conta> contas = new ArrayList<>();
+        No<Conta> cabeca = this.primeiro_no;
 
-        if (no_conta != null) result = no_conta.getElemento();
+        while (cabeca != null) {
+            contas.add(cabeca.getElemento());
+            cabeca = cabeca.getProximo();
+        }
 
-        return result;
+        return contas;
     }
 
     public void listarContas() {

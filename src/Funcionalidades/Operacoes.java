@@ -3,6 +3,7 @@ package Funcionalidades;
 import Objetos.*;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 record ContaDados(String tipo_conta, String cpf, String agenciaNumero) {
@@ -20,7 +21,7 @@ public final class Operacoes {
 
             do {
                 nova_agencia = setDadosAgencia();
-            } while (!Utilidades.validarDadosAgencia(nova_agencia, agenciasLista, "cadastrar"));
+            } while (!Utilidades.validarDadosAgencia(nova_agencia, -1, agenciasLista));
 
             opcao = Utilidades.confirmaOperacao();
             if (opcao.equalsIgnoreCase("S")) {
@@ -40,33 +41,29 @@ public final class Operacoes {
             Scanner scanner = new Scanner(System.in);
 
             System.out.println("ALTERAÇÃO DE AGÊNCIA");
-            System.out.println("Informe o número da agência a ser alterada: ");
-            String agencia_numero = scanner.nextLine();
+            System.out.println("Informe o ID da agência a ser alterada: ");
+            int agencia_id = scanner.nextInt();
 
-            Agencia agencia = agenciasLista.listarAgenciaPorNumero(agencia_numero);
+            Agencia agencia = agenciasLista.listarAgenciaPorID(agencia_id);
 
             if (agencia != null) {
                 System.out.println("AGÊNCIA ENCONTRADA\n");
+                System.out.println(agencia);
                 Agencia agencia_alterar;
 
                 do {
                     agencia_alterar = setDadosAgencia();
-                    is_valid = Utilidades.validarDadosAgencia(agencia_alterar, agenciasLista, "atualizar");
+                    is_valid = Utilidades.validarDadosAgencia(agencia_alterar, agencia_id, agenciasLista);
 
-                    if (agencia_alterar.getNumero().equalsIgnoreCase(agencia_numero) && is_valid) {
+                    if (is_valid) {
                         escolha = Utilidades.confirmaOperacao();
                         if (escolha.equalsIgnoreCase("S")) {
-                            agenciasLista.atualizarAgencia(agencia_numero, agencia_alterar);
+                            agenciasLista.atualizarAgencia(agencia_id, agencia_alterar);
                             System.out.println("Dados da agência alterados com sucesso.");
                             continuar = "N";
                         }
                     }
-                    else {
-                        System.out.println("O número do agência não pode ser alterado! " +
-                                "Para tal deve-se excluí-la e recadastrá-la");
-                        is_valid = false;
-                        continuar = Utilidades.getRepetirOperacao();
-                    }
+
                 } while (!is_valid || continuar.equalsIgnoreCase("S"));
             }
             else {
@@ -162,7 +159,7 @@ public final class Operacoes {
 
             do {
                 novo_cliente = setDadosCliente();
-            } while (!Utilidades.validarDadosCliente(novo_cliente, clientesLista, "cadastrar"));
+            } while (!Utilidades.validarDadosCliente(novo_cliente, -1, clientesLista));
 
             opcao = Utilidades.confirmaOperacao();
             if (opcao.equalsIgnoreCase("S")) {
@@ -193,7 +190,7 @@ public final class Operacoes {
 
                 do {
                     cliente_alterar = setDadosCliente();
-                    is_valid = Utilidades.validarDadosCliente(cliente_alterar, clientesLista, "atualizar");
+                    is_valid = Utilidades.validarDadosCliente(cliente_alterar, cliente_id, clientesLista);
 
                     if (cliente_alterar.getCpf().equalsIgnoreCase(cliente.getCpf()) && is_valid) {
                         escolha = Utilidades.confirmaOperacao();
@@ -220,7 +217,7 @@ public final class Operacoes {
         } while (escolha.equalsIgnoreCase("S"));
     }
 
-    public static void excluirCliente(ClientesLista clientesLista) throws InputMismatchException {
+    public static void excluirCliente(ClientesLista clientesLista, ContasLista contasLista) throws InputMismatchException {
         String escolha;
         do {
             Scanner scanner = new Scanner(System.in);
@@ -229,14 +226,21 @@ public final class Operacoes {
             int cliente_id = scanner.nextInt();
 
             Cliente cliente = clientesLista.listarClientePorID(cliente_id);
+            List<Conta> contas = contasLista.listarContasPorClienteID(cliente_id);
 
             if (cliente != null) {
-                System.out.println("CLIENTE ENCONTRADO\n");
-                System.out.println(cliente);
-                escolha = Utilidades.confirmaOperacao();
-                if (escolha.equalsIgnoreCase(("S"))) {
-                    clientesLista.excluirCliente(cliente_id);
-                    System.out.println("CLIENTE DELETADO!\n");
+                if (contas.size() == 0){
+                    System.out.println("CLIENTE ENCONTRADO\n");
+                    System.out.println(cliente);
+                    escolha = Utilidades.confirmaOperacao();
+                    if (escolha.equalsIgnoreCase(("S"))) {
+                        clientesLista.excluirCliente(cliente_id);
+                        System.out.println("CLIENTE DELETADO!\n");
+                    }
+                }
+                else {
+                    System.out.println("O cliente possui as seguintes contas abertas: ");
+                    contas.forEach(s -> System.out.printf("- %s%n", s));
                 }
             }
             else {
@@ -353,16 +357,11 @@ public final class Operacoes {
         do {
             Scanner scanner = new Scanner(System.in);
             System.out.println("CONSULTAR CONTA");
-            System.out.println("Informe o Nº ou o cpf do titular da conta a ser pesquisada: ");
-            String numero_cpf = scanner.nextLine();
+            System.out.println("Informe o Nº da conta a ser pesquisada: ");
+            String numero = scanner.nextLine();
 
-            Conta conta;
-            conta = contasLista.listarContaPorNumero(numero_cpf);
-            if (conta == null) {
-                Cliente cliente = clientesLista.listarClientePorCpf(numero_cpf);
-                if (cliente != null)
-                    conta = contasLista.listarContaPorClienteID(cliente.getID());
-            }
+            Conta conta = contasLista.listarContaPorNumero(numero);
+
             if (conta != null) {
                 System.out.println("CONTA ENCONTRADA\n");
                 System.out.println(conta);

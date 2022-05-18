@@ -37,27 +37,22 @@ public final class Utilidades {
         System.out.println("Erro ao realizar consulta. Verifique os dados a serem pesquisados.");
     }
 
-    public static void mensagemConsultasNaoEncontrada() {
-        System.out.println("Nada foi encontrado.");
-    }
-
-    public static boolean validarDadosAgencia(Agencia agencia, AgenciasLista agenciasLista, String operacao) {
+    public static boolean validarDadosAgencia(Agencia agencia, int agencia_id, AgenciasLista agenciasLista) {
         short erros = 0;
         String mensagemDeErro = "Os seguintes critérios de validação não foram atendidos:\n";
 
         Agencia compare_nome = agenciasLista.listarAgenciaPorNome(agencia.getNome());
         Agencia compare_numero = agenciasLista.listarAgenciaPorNumero(agencia.getNumero());
-        if (operacao.equalsIgnoreCase("cadastrar") || operacao.equalsIgnoreCase("atualizar")) {
-            if (compare_nome != null && !compare_nome.equals(agencia)) {
+
+        if (compare_nome != null && compare_nome.getID() != agencia_id) {
                 mensagemDeErro += String.format("- Agência com nome \"%s\" já cadastrada\n", agencia.getNome());
                 erros += 1;
-            }
         }
-        else if (compare_numero != null && !compare_numero.equals(agencia)) {
+        if (compare_numero != null && compare_numero.getID() != agencia_id) {
             mensagemDeErro += String.format("- Agência com número \"%s\" já cadastrada\n", agencia.getNumero());
             erros += 1;
         }
-        else if (Integer.parseInt(agencia.getNumero()) <= 0) {
+        if (Integer.parseInt(agencia.getNumero()) <= 0) {
             mensagemDeErro += "- O numero da agência deve ser maior que zero\n";
             erros += 1;
         }
@@ -71,18 +66,17 @@ public final class Utilidades {
         return true;
     }
 
-    public static boolean validarDadosCliente(Cliente cliente, ClientesLista clientesLista, String operacao) {
+    public static boolean validarDadosCliente(Cliente cliente, int cliente_id, ClientesLista clientesLista) {
         short erros = 0;
         String mensagemDeErro = "Os seguintes critérios de validação não foram atendidos:\n";
 
-        Cliente compare_numero = clientesLista.listarClientePorCpf(cliente.getCpf());
-        if (operacao.equalsIgnoreCase("cadastrar") || operacao.equalsIgnoreCase("atualizar")) {
-            if (compare_numero != null && !compare_numero.equals(cliente)) {
+        Cliente compare_cpf = clientesLista.listarClientePorCpf(cliente.getCpf());
+
+        if (compare_cpf != null && compare_cpf.getID() != cliente_id) {
                 mensagemDeErro += String.format("- Cliente com cpf \"%s\" já cadastrado\n", cliente.getCpf());
                 erros += 1;
-            }
         }
-        else if (cliente.getIdade() < 0) {
+        if (cliente.getIdade() < 0) {
             mensagemDeErro += "- A idade deve ser maior ou igual a zero\n";
             erros += 1;
         }
@@ -103,6 +97,7 @@ public final class Utilidades {
         Conta nova_conta = data.tipo_conta().equalsIgnoreCase("Corrente") ? new ContaCorrente() : new ContaPoupanca();
         Agencia agencia = agenciasLista.listarAgenciaPorNumero(data.agenciaNumero());
         Cliente cliente= clientesLista.listarClientePorCpf(data.cpf());
+
         if (agencia == null){
             mensagemDeErro += String.format("- A agência de Nº%s não existe\n", data.agenciaNumero());
             erros += 1;

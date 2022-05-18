@@ -60,11 +60,22 @@ public class AgenciasLista extends Lista {
         return false;
     }
 
-    private No<Agencia> buscarNoPorNome(String produto_nome) {
+    private No<Agencia> buscarNoPorID(int agencia_id) {
         No<Agencia> cabeca = this.primeiro_no;
 
         while(cabeca != null) {
-            if (cabeca.getElemento().getNome().equalsIgnoreCase(produto_nome)) break;
+            if (cabeca.getElemento().getID() == agencia_id) break;
+            cabeca = cabeca.getProximo();
+        }
+
+        return cabeca;
+    }
+
+    private No<Agencia> buscarNoPorNome(String agencia_nome) {
+        No<Agencia> cabeca = this.primeiro_no;
+
+        while(cabeca != null) {
+            if (cabeca.getElemento().getNome().equalsIgnoreCase(agencia_nome)) break;
             cabeca = cabeca.getProximo();
         }
 
@@ -130,11 +141,20 @@ public class AgenciasLista extends Lista {
         System.gc();
     }
 
-    public void atualizarAgencia(String agencia_numero, Agencia agencia_alterada) {
-        No<Agencia> no_agencia = buscarNoPorNumero(agencia_numero);
+    public void atualizarAgencia(int agencia_id, Agencia agencia_alterada) {
+        No<Agencia> no_agencia = buscarNoPorID(agencia_id);
 
         no_agencia.getElemento().setNome(agencia_alterada.getNome());
         no_agencia.getElemento().setNumero(agencia_alterada.getNumero());
+    }
+
+    public Agencia listarAgenciaPorID(int agencia_id) {
+        No<Agencia> no_agencia = this.buscarNoPorID(agencia_id);
+        Agencia result = null;
+
+        if (no_agencia != null) result = no_agencia.getElemento();
+
+        return result;
     }
 
     public Agencia listarAgenciaPorNome(String agencia_nome) {
