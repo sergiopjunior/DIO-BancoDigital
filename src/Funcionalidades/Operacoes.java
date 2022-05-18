@@ -66,9 +66,7 @@ public final class Operacoes {
 
                 } while (!is_valid || continuar.equalsIgnoreCase("S"));
             }
-            else {
-                Utilidades.mensagemConsultaNaoEncontrada();
-            }
+            else Utilidades.mensagemConsultaNaoEncontrada();
 
             escolha = Utilidades.getRepetirOperacao();
 
@@ -94,9 +92,7 @@ public final class Operacoes {
                     System.out.println("AGÊNCIA DELETADA!\n");
                 }
             }
-            else {
-                Utilidades.mensagemConsultaNaoEncontrada();
-            }
+            else Utilidades.mensagemConsultaNaoEncontrada();
 
             escolha = Utilidades.getRepetirOperacao();
 
@@ -117,9 +113,7 @@ public final class Operacoes {
                 System.out.println("AGÊNCIA ENCONTRADA\n");
                 System.out.println(agencia);
             }
-            else {
-                Utilidades.mensagemConsultaNaoEncontrada();
-            }
+            else Utilidades.mensagemConsultaNaoEncontrada();
 
             escolha = Utilidades.getRepetirOperacao();
 
@@ -208,9 +202,7 @@ public final class Operacoes {
                     }
                 } while (!is_valid || continuar.equalsIgnoreCase("S"));
             }
-            else {
-                Utilidades.mensagemConsultaNaoEncontrada();
-            }
+            else Utilidades.mensagemConsultaNaoEncontrada();
 
             escolha = Utilidades.getRepetirOperacao();
 
@@ -243,9 +235,7 @@ public final class Operacoes {
                     contas.forEach(s -> System.out.printf("- %s%n", s));
                 }
             }
-            else {
-                Utilidades.mensagemConsultaNaoEncontrada();
-            }
+            else Utilidades.mensagemConsultaNaoEncontrada();
 
             escolha = Utilidades.getRepetirOperacao();
 
@@ -266,9 +256,7 @@ public final class Operacoes {
                 System.out.println("CLIENTE ENCONTRADO\n");
                 System.out.println(cliente);
             }
-            else {
-                Utilidades.mensagemConsultaNaoEncontrada();
-            }
+            else Utilidades.mensagemConsultaNaoEncontrada();
 
             escolha = Utilidades.getRepetirOperacao();
 
@@ -343,9 +331,8 @@ public final class Operacoes {
                     System.out.println("CONTA FECHADA!\n");
                 }
             }
-            else {
-                Utilidades.mensagemConsultaNaoEncontrada();
-            }
+            else Utilidades.mensagemConsultaNaoEncontrada();
+
 
             escolha = Utilidades.getRepetirOperacao();
 
@@ -366,9 +353,7 @@ public final class Operacoes {
                 System.out.println("CONTA ENCONTRADA\n");
                 System.out.println(conta);
             }
-            else {
-                Utilidades.mensagemConsultaNaoEncontrada();
-            }
+            else Utilidades.mensagemConsultaNaoEncontrada();
 
             escolha = Utilidades.getRepetirOperacao();
 

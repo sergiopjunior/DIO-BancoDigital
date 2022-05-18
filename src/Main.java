@@ -160,6 +160,30 @@ public class Main {
                 case 1 -> Operacoes.cadastrarConta(this.contasLista, this.clientesLista, this.agenciasLista);
                 case 2 -> Operacoes.excluirConta(this.contasLista);
                 case 3 -> Operacoes.consultarConta(this.contasLista, this.clientesLista);
+                case 4 -> this.menuOpcaoTransacoes();
+                case 0 -> System.out.println("Retornando para o Menu Principal...\n");
+                default -> opcaoInvalida();
+            }
+        } while (opcao != 0);
+    }
+
+    private void menuOpcaoTransacoes() {
+        int opcao;
+        do {
+            System.out.println("""
+					         TRANSAÇÕES
+								
+							    Menu
+					1 - DEPÓSITO
+					2 - SAQUE
+					3 - TRANSFERÊNCIA
+					0 - RETORNAR
+					OPÇÃO:\040""");
+            opcao = Utilidades.getEscolhaMenu();
+            switch (opcao) {
+                case 1 -> Transacoes.Depositar(this.contasLista);
+                case 2 -> Operacoes.relatorioDeClientes(this.clientesLista);
+                case 3 -> Operacoes.relatorioDeContas(this.contasLista);
                 case 0 -> System.out.println("Retornando para o Menu Principal...\n");
                 default -> opcaoInvalida();
             }
