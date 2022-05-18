@@ -182,8 +182,8 @@ public class Main {
             opcao = Utilidades.getEscolhaMenu();
             switch (opcao) {
                 case 1 -> Transacoes.Depositar(this.contasLista);
-                case 2 -> Operacoes.relatorioDeClientes(this.clientesLista);
-                case 3 -> Operacoes.relatorioDeContas(this.contasLista);
+                case 2 -> Transacoes.Sacar(this.contasLista);
+                case 3 -> Transacoes.Transferir(this.contasLista);
                 case 0 -> System.out.println("Retornando para o Menu Principal...\n");
                 default -> opcaoInvalida();
             }
