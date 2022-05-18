@@ -4,7 +4,9 @@ import Funcionalidades.*;
 import Objetos.ContasLista;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.InputMismatchException;
 
 public class Main {
@@ -65,6 +67,11 @@ public class Main {
                     case 0 -> System.out.println("Saindo do Sistema!");
                     default -> opcaoInvalida();
                 }
+                try {
+                    String path = new File (".").getCanonicalPath().replace("\\", "/");
+                    new PrintWriter(path + "/src/system.txt").close();
+                }
+                catch (Exception ignored) {}
                 this.agenciasLista.salvarDados();
                 this.clientesLista.salvarDados();
                 this.contasLista.salvarDados();

@@ -42,7 +42,6 @@ public class ContasLista extends Lista {
             String[] data = line.split(" - ");
             if (data[0].equalsIgnoreCase("ContaNextID")) {
                 this.setProximoCodigo(Integer.parseInt(data[1]));
-                System.out.println(data[1]);
                 break;
             }
         }
@@ -50,11 +49,12 @@ public class ContasLista extends Lista {
     }
 
     public void salvarDados() throws IOException {
-        String path = new File (".").getCanonicalPath();
+        String path = new File (".").getCanonicalPath().replace("\\", "/");
 
         FileWriter fw = new FileWriter(path + "/src/system.txt", true);
         BufferedWriter bw = new BufferedWriter(fw);
         bw.write(String.format("ContaNextID - %d", this.getProximoCodigo()));
+        bw.flush();
 
         fw  = new FileWriter(path + "/src/contas.txt", false);
         bw = new BufferedWriter(fw);

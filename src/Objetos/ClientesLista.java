@@ -34,11 +34,11 @@ public class ClientesLista extends Lista {
     }
 
     public void salvarDados() throws IOException {
-        String path = new File (".").getCanonicalPath();
-
+        String path = new File (".").getCanonicalPath().replace("\\", "/");
         FileWriter fw = new FileWriter(path + "/src/system.txt", true);
         BufferedWriter bw = new BufferedWriter(fw);
-        bw.write(String.format("ClienteNextID - %d", this.getProximoCodigo()));
+        bw.write(String.format("ClienteNextID - %d\n", this.getProximoCodigo()));
+        bw.flush();
 
         fw  = new FileWriter(path + "/src/clientes.txt", false);
         bw = new BufferedWriter(fw);

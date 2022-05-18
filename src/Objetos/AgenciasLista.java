@@ -34,11 +34,12 @@ public class AgenciasLista extends Lista {
     }
 
     public void salvarDados() throws IOException {
-        String path = new File (".").getCanonicalPath();
+        String path = new File (".").getCanonicalPath().replace("\\", "/");
 
         FileWriter fw = new FileWriter(path + "/src/system.txt", true);
         BufferedWriter bw = new BufferedWriter(fw);
-        bw.write(String.format("AgenciaNextID - %d", this.getProximoCodigo()));
+        bw.write(String.format("AgenciaNextID - %d\n", this.getProximoCodigo()));
+        bw.flush();
 
         fw = new FileWriter(path + "/src/agencias.txt", false);
         bw = new BufferedWriter(fw);
