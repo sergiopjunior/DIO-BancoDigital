@@ -180,7 +180,8 @@ public class ContasLista extends Lista {
         No<Conta> cabeca = this.primeiro_no;
 
         while (cabeca != null) {
-            contas.add(cabeca.getElemento());
+            if (cabeca.getElemento().getClienteID() == cliente_id)
+                contas.add(cabeca.getElemento());
             cabeca = cabeca.getProximo();
         }
 

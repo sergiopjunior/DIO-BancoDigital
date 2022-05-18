@@ -34,7 +34,7 @@ public abstract class Conta implements IConta {
         this.clienteID = clienteID;
         this.agenciaID = agenciaID;
         this.saldo = saldo;
-        this.numero = String.valueOf(this.hashCode());
+        this.numero = String.valueOf(Math.abs(this.hashCode()));
     }
 
     public int getID() {
@@ -135,17 +135,17 @@ public abstract class Conta implements IConta {
 
     @Override
     public int hashCode() {
-        return this.numero.hashCode() + this.tipo_conta.hashCode() + this.agenciaID + this.clienteID + this.ID;
+        return this.tipo_conta.hashCode() + this.agenciaID + this.clienteID + this.ID;
     }
 
     @Override
     public String toString() {
-        return String.format("Número: %s - Agência: %d - Tipo: %s - ClienteID: %d - Saldo: %f\n",
+        return String.format("Número: %s - AgênciaID: %d - Tipo: %s - ClienteID: %d - Saldo: %f\n",
                 this.getNumero(), this.getAgenciaID(), this.tipo_conta, this.getClienteID(), this.getSaldo());
     }
 
     public String dataString() {
-        return String.format("%d - %d - %s - %d - %s - %f\n",
-                this.getID(), this.getClienteID(), this.getNumero(), this.getAgenciaID(), this.tipo_conta, this.getSaldo());
+        return String.format("%d - %d - %s - %d - %s - %s\n",
+                this.getID(), this.getClienteID(), this.getNumero(), this.getAgenciaID(), this.tipo_conta, this.getSaldo()).replace(",", ".");
     }
 }

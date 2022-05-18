@@ -27,7 +27,6 @@ public class ClientesLista extends Lista {
             String[] data = line.split(" - ");
             if (data[0].equalsIgnoreCase("ClienteNextID")) {
                 this.setProximoCodigo(Integer.parseInt(data[1]));
-                System.out.println(data[1]);
                 break;
             }
         }

@@ -67,7 +67,7 @@ public class Main {
                 }
                 this.agenciasLista.salvarDados();
                 this.clientesLista.salvarDados();
-                this.contasLista.carregarDados();
+                this.contasLista.salvarDados();
             }
             catch (IOException | InputMismatchException ignored){
             }
