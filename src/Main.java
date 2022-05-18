@@ -65,12 +65,9 @@ public class Main {
                     case 0 -> System.out.println("Saindo do Sistema!");
                     default -> opcaoInvalida();
                 }
-                File file = new File(new File(".").getCanonicalPath() + "/src/system.txt");
-//            PrintWriter writer = new PrintWriter(file);
-//            writer.print("");
-//            writer.close();
                 this.agenciasLista.salvarDados();
                 this.clientesLista.salvarDados();
+                this.contasLista.carregarDados();
             }
             catch (IOException | InputMismatchException ignored){
             }
